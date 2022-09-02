@@ -44,22 +44,29 @@ async function login(form) {
   const { name, email, password } = form;
   await signInWithEmailAndPassword(auth, email, password);
 }
+
+async function getuserData() {
+  const uid = auth.currentUser.uid;
+  console.log("UID AYI--->>", uid);
+}
+
 async function getRestaurant() {
   // const uid auth.
   const q = query(collection(db, "restaurant"));
+  console.log(db, "menu");
   const querySnapshot = await getDocs(q);
   let data = [];
   querySnapshot.forEach((doc) => {
-      const adds = { ...doc.data(), id: doc.id  };
-      data.push(adds);
+    const adds = { ...doc.data(), id: doc.id };
+    data.push(adds);
   });
   return data;
 }
 
 async function getRestaurantDetail(id) {
-  const docRef = doc(db, "restaurant", id)
-  const docSnap = await getDoc(docRef)
-  return docSnap.data()
+  const docRef = doc(db, "restaurant", id);
+  const docSnap = await getDoc(docRef);
+  return docSnap.data();
 }
 
-export { createUser, login, getRestaurant,getRestaurantDetail };
+export { createUser, login, getRestaurant, getRestaurantDetail, getuserData };

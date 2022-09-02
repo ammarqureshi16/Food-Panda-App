@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import {
   View,
   Text,
@@ -8,10 +8,14 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import { getRestaurant } from "../../config/firebase";
+import { getRestaurant,getuserData } from "../../config/firebase"; 
 
 export default function Home({ navigation }) {
+  useLayoutEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
   const [rednerRestaurant, setRenderRestaurant] = useState([]);
+  const [userData, setUserData] = useState()
 
   const renderAdds = async () => {
     try {
@@ -23,11 +27,29 @@ export default function Home({ navigation }) {
     return result;
   };
 
+  const userInfor = async () => {
+    try {
+      const result = await getuserData()
+      setUserData(result)
+      console.log("USER INFORMATION-->>",userData)
+    } catch (e) {
+      alert(e.message)
+    }
+  }
+
   useEffect(() => {
     renderAdds();
+    userInfor()
   }, []);
   return (
     <>
+      <View>
+        {/* <View style={{ height: 150 }}>
+          <Text>Food delivery</Text>
+          <Text> order your favourits </Text>
+          <Text> restaurant and home chef </Text>
+        </View> */}
+      </View>
       <View style={styles.restNameTextView}>
         <Text style={styles.restText}>Restaurants</Text>
       </View>
@@ -114,7 +136,7 @@ const styles = StyleSheet.create({
     width: "40%",
   },
   restText: {
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: "bold",
   },
   flatlistMainView: {
@@ -123,8 +145,8 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   resturImg: {
-    width: 380,
-    height: 250,
+    width: 390,
+    height: 190,
     borderRadius: 12,
   },
   restName: {

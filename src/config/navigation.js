@@ -29,9 +29,12 @@ export default function MainNavigator() {
 
 function MainStack() {
   return (
-    
     <Drawer.Navigator>
-      <Drawer.Screen name="Home" component={DashboardStack} />
+      <Drawer.Screen
+        screenOptions={{ headerShown: false }}
+        name="Home"
+        component={DashboardStack}
+      />
       <Drawer.Screen name="Profile" component={Profile} />
       <Drawer.Screen name="Login" component={Login} />
       <Drawer.Screen name="SignUp" component={Signup} />

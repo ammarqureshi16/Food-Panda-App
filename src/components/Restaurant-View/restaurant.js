@@ -25,8 +25,11 @@ export default function RestaurantView({ route }) {
   if (!data) {
     return (
       <>
-        <View>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
           <Text>Loading......</Text>
+          {/* <Image style={{height: 150,width: 150}} source={}/> */}
         </View>
       </>
     );
