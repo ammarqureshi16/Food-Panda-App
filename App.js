@@ -1,9 +1,13 @@
 import MainNavigator from "./src/config/navigation";
-import { View, TextInput, Text, TouchableOpacity } from "react-native-web";
+import { Provider } from "react-redux";
+import store from "./src/Store";
+
 export default function App() {
   return (
     <>
-      <MainNavigator />
+      <Provider store={store}>
+        <MainNavigator />
+      </Provider>
     </>
   );
 }

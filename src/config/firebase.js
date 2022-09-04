@@ -28,6 +28,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+// // User Sign Up
 async function createUser(form) {
   const { email, password, name } = form;
   const result = await createUserWithEmailAndPassword(auth, email, password);
@@ -39,21 +40,26 @@ async function createUser(form) {
   });
   return "done";
 }
-
+// // User Login
 async function login(form) {
   const { name, email, password } = form;
   await signInWithEmailAndPassword(auth, email, password);
 }
 
+// // User Information Get
 async function getuserData() {
   const uid = auth.currentUser.uid;
-  console.log("UID AYI--->>", uid);
+  // console.log("UID AYI--->>", uid);
+  const docRef = doc(db, "users", uid);
+  const docSnap = await getDoc(docRef);
+  return docSnap.data();
 }
 
+// // Restaurant Collection Get
 async function getRestaurant() {
   // const uid auth.
   const q = query(collection(db, "restaurant"));
-  console.log(db, "menu");
+  // console.log(db, "menu");
   const querySnapshot = await getDocs(q);
   let data = [];
   querySnapshot.forEach((doc) => {
@@ -63,10 +69,27 @@ async function getRestaurant() {
   return data;
 }
 
+// // Restaurant
 async function getRestaurantDetail(id) {
   const docRef = doc(db, "restaurant", id);
   const docSnap = await getDoc(docRef);
   return docSnap.data();
 }
 
-export { createUser, login, getRestaurant, getRestaurantDetail, getuserData };
+async function getRestaurentMenu(id) {
+  console.log(id);
+  // console.log("firebase call hoa");
+  let menu = [];
+  const querySnapshot = await getDocs(
+    collection(db, "restaurant", id, "menu")
+  );
+  querySnapshot.forEach((doc) => {
+    const temp = { ...doc.data(), id: doc.id };
+    menu.push(temp);
+    console.log("DATA AYA-->",temp)
+  });
+
+  return menu;
+}
+
+export { createUser, login, getRestaurant, getRestaurantDetail, getuserData,getRestaurentMenu };

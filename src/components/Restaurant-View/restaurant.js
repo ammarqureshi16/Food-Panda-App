@@ -7,20 +7,31 @@ import {
   ScrollView,
 } from "react-native";
 import { useState, useEffect } from "react";
-import { getRestaurantDetail } from "../../config/firebase";
+import { getRestaurantDetail, getRestaurentMenu } from "../../config/firebase";
+import { addToCart } from "../../Store/Action";
+import { useDispatch } from "react-redux";
 
 export default function RestaurantView({ route }) {
   const { itemId } = route.params;
   const [data, setData] = useState();
+  const [detail, setDetail] = useState([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    getAdds();
+    getData();
+    // console.log('my Cart', dispatch(addToCart))
+  }, []);
 
   const getAdds = async () => {
     const result = await getRestaurantDetail(itemId);
     setData(result);
   };
 
-  useEffect(() => {
-    getAdds();
-  }, []);
+  const getData = async () => {
+    const results = await getRestaurentMenu(itemId);
+    setDetail(results);
+  };
 
   if (!data) {
     return (
@@ -72,7 +83,45 @@ export default function RestaurantView({ route }) {
               </View>
             </ScrollView>
           </View>
-          <View style={{ marginLeft: 10 }}>
+          <TouchableOpacity
+            onPress={() => {
+              dispatch(addToCart({ item: "working" }));
+            }}
+          >
+            {console.log("DATA-->>>", addToCart)}
+
+            {detail.map((item) => {
+              return (
+                <View
+                  style={{
+                    // backgroundColor: "#b81c5d",
+                    borderWidth: 1,
+                    width: 400,
+                    height: 100,
+                    borderRadius: 12,
+                    alignItems: "center",
+                    marginLeft: 10,
+                    margin: 10,
+                  }}
+                >
+                  <View
+                    style={{
+                      margin: 10,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={{ fontSize: 18 }}>
+                      {item.price}
+                      {/* {price ? item.price : "Ammar"} */}
+                    </Text>
+                  </View>
+                </View>
+              );
+            })}
+          </TouchableOpacity>
+          <View style={{ margin: 10 }}>
             <Text style={styles.mostOrderText}>Most Order Right Now</Text>
           </View>
           {/* <View
@@ -82,7 +131,7 @@ export default function RestaurantView({ route }) {
               alignItems: "center",
             }}
           >
-            {menu.map((item) => {
+            {data .map((item) => {
               return (
                 <>
                   <View>
@@ -148,7 +197,7 @@ const styles = StyleSheet.create({
   },
   silderTextView: {
     width: 70,
-    borderBottomColor: "red",
+    borderBottomColor: 1,
   },
   mostOrderText: {
     fontSize: 17,

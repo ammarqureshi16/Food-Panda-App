@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Button,
-  TextInput,
-} from "react-native";
+import { StyleSheet, Text, View, Button, TextInput, Image, TouchableOpacity } from "react-native";
 import { login } from "../../config/firebase";
 
 export default function Login({ navigation }) {
@@ -19,97 +12,81 @@ export default function Login({ navigation }) {
     try {
       const user = await login(form);
       alert("Login Done");
+      setForm("");
       navigation.navigate("Home");
     } catch (e) {
       alert(e.message);
+      setForm("");
     }
   };
   return (
-    <ScrollView>
+    <>
       <View style={styles.container}>
-        <View style={styles.cardView}>
-          <View>
-            <Text style={styles.headingLogin}> Login </Text>
-          </View>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.input}
-              onChangeText={(e) => {
-                inputValue(e, "name");
-              }}
-              value={form.name}
-              placeholder={"Enter Your Full Name :"}
-            />
-          </View>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.input}
-              onChangeText={(e) => {
-                inputValue(e, "email");
-              }}
-              value={form.email}
-              placeholder="Enter Your Email :"
-            />
-          </View>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.input}
-              onChangeText={(e) => {
-                inputValue(e, "password");
-              }}
-              value={form.password}
-              placeholder="Enter Your Password :"
-            />
-          </View>
-          <View style={styles.buttonView}>
-            <Button style={{ width: 100 }} onPress={loginNow} title="Login" />
-          </View>
+        <View style={{ width: "100%", alignItems: "center" }}>
+          <Image
+            style={styles.foodPandaLogo}
+            source={{
+              uri: "https://insideretail.asia/wp-content/uploads/2020/09/Food-Panda-new-logo-1.png",
+            }}
+          />
+        </View>
+        <View style={{ width: "100%", alignItems: "center" }}>
+          <Text style={styles.heading}>Login</Text>
+
+          <TextInput
+            style={styles.loginInput}
+            placeholder="Name..."
+            onChangeText={(form) => {
+              inputValue("name", form);
+            }}
+          />
+          <TextInput
+            style={styles.loginInput}
+            keyboardType="email"
+            textContentType="emailAddress"
+            placeholder="Email..."
+            onChangeText={(form) => {
+              inputValue("email", form);
+            }}
+          />
+          <TextInput
+            style={styles.loginInput}
+            secureTextEntry={true}
+            placeholder="Password..."
+            onChangeText={(form) => {
+              inputValue("password", form);
+            }}
+          />
+          <TouchableOpacity style={{width:"80%",borderRadius: 15}}>
+          <Button onPress={loginNow} title="Login" />
+          </TouchableOpacity>
         </View>
       </View>
-    </ScrollView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    backgroundColor: "#D70F64",
     alignItems: "center",
-    height: 640,
   },
-  cardView: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "white",
-    backgroundColor: "#fff",
-    width: "90%",
+  foodPandaLogo: {
+    width: "50%",
+    height: 120,
   },
-  headingLogin: {
-    fontSize: 50,
-    textAlign: "center",
-    padding: 15,
-  },
-  inputView: {
-    width: "90%",
-    justifyContent: "center",
-    alignItems: "center",
+  heading: {
+    color: "white",
+    fontSize: 36,
     margin: 10,
   },
-  input: {
-    paddingLeft: 15,
-    borderColor: "black",
-    borderWidth: 0.1,
-    width: "100%",
+  loginInput: {
+    width: "80%",
     height: 50,
-    fontSize: 15,
+    margin: 5,
+    borderRadius: 10,
+    paddingLeft: 10,
     backgroundColor: "white",
-    borderRadius: 2,
-  },
-  buttonView: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    margin: 15,
-    borderRadius: 2,
   },
 });
